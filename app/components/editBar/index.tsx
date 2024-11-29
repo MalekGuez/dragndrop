@@ -253,10 +253,10 @@ export default function EditBar() {
                 setFormatState({
                     h1: parentElement.tagName === 'H1',
                     h2: parentElement.tagName === 'H2',
-                    bold: window.getSelection()?.toString() && document.queryCommandState('bold'),
-                    italic: window.getSelection()?.toString() && document.queryCommandState('italic'),
-                    underline: window.getSelection()?.toString() && document.queryCommandState('underline'),
-                    strikethrough: window.getSelection()?.toString() && document.queryCommandState('strikethrough'),
+                    bold: Boolean(window.getSelection()?.toString()) && document.queryCommandState('bold'),
+                    italic: Boolean(window.getSelection()?.toString()) && document.queryCommandState('italic'),
+                    underline: Boolean(window.getSelection()?.toString()) && document.queryCommandState('underline'),
+                    strikethrough: Boolean(window.getSelection()?.toString()) && document.queryCommandState('strikethrough'),
                     alignment: computedStyle.textAlign || 'left'
                 });
             } catch (e) {
