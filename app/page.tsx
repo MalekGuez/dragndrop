@@ -3,16 +3,21 @@
 import Nav from "./components/nav";
 import EditBar from "./components/editBar";
 import { useState, useCallback, KeyboardEvent } from 'react';
-import { DndContext, DragEndEvent, DragOverlay, useDraggable } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { Droppable } from './components/Droppable';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { SortableItem } from './components/SortableItem';
 
+interface Section {
+    id: string;
+    content: string;
+    name?: string; 
+}
+
 export default function Home() {
-    const [sections, setSections] = useState<any[]>([]);
+    const [sections, setSections] = useState<Section[]>([]);
     const [activeId, setActiveId] = useState<string | null>(null);
-    const [isEditing, setIsEditing] = useState(false);
 
     const handleDragEnd = useCallback((event: DragEndEvent) => {
         const { active, over } = event;
@@ -20,9 +25,9 @@ export default function Home() {
         if (!over) return;
         
         if (typeof active.id === 'string' && active.id.startsWith('{')) {
-            const newSection = JSON.parse(active.id);
+            const newSection = JSON.parse(active.id) as Omit<Section, 'id'>;
             const uniqueId = `section-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-            const sectionWithId = {
+            const sectionWithId: Section = {
                 ...newSection,
                 id: uniqueId
             };
@@ -69,10 +74,8 @@ export default function Home() {
                                             <div
                                                 contentEditable
                                                 suppressContentEditableWarning
-                                                onFocus={() => setIsEditing(true)}
                                                 onBlur={(e) => {
                                                     handleContentEdit(section.id, e.currentTarget.innerHTML);
-                                                    setIsEditing(false);
                                                 }}
                                                 className="cursor-text focus:outline-none focus-within:ring-1 focus-within:ring-black focus-within:ring-opacity-50 p-2"
                                                 onKeyDown={(e: KeyboardEvent) => {
@@ -100,7 +103,7 @@ export default function Home() {
                     <div className="border border-black bg-white p-2 bg-transparent cursor-move">
                         {activeId.startsWith('{') 
                             ? <div dangerouslySetInnerHTML={{__html: JSON.parse(activeId).content}} />
-                            : <div dangerouslySetInnerHTML={{__html: sections.find(section => section.id === activeId)?.content}} />
+                            : <div dangerouslySetInnerHTML={{__html: sections.find(section => section.id === activeId)?.content || ''}} />
                         }
                     </div>
                 )}

@@ -21,6 +21,13 @@ import {
 import { useState, useEffect } from 'react';
 import { Colorful } from '@uiw/react-color';
 
+interface IconItem {
+    id: string;
+    icon: string;
+    name: string;
+    onClick?: (e: React.MouseEvent) => void;
+    customRender?: (item: IconItem) => React.ReactNode;
+}
 
 export default function EditBar() {
     const [formatState, setFormatState] = useState({
@@ -262,6 +269,7 @@ export default function EditBar() {
                     strikethrough: false,
                     alignment: 'left'
                 });
+                console.log(e);
             }
 
             const computedStyle = window.getComputedStyle(parentElement);
@@ -313,12 +321,12 @@ export default function EditBar() {
         document.execCommand('undo');
     };
 
-    const getIcons = () => [
+    const getIcons = (): IconItem[] => [
         {
             id: 'undo',
             icon: UndoArrow,
             name: 'Revenir en arrière',
-            customRender: (item: any) => (
+            customRender: (item: IconItem) => (
                 <button
                     className="p-2 hover:bg-gray-100 rounded-lg"
                     title={item.name}
@@ -349,7 +357,8 @@ export default function EditBar() {
         {
             id: 'font-family',
             name: 'Police d\'écriture',
-            customRender: (item: any) => (
+            icon: "",
+            customRender: (item: IconItem) => (
                 <div className="relative">
                     <button
                         className={`p-2 rounded-lg 
@@ -410,7 +419,8 @@ export default function EditBar() {
         {
             id: 'font-size',
             name: 'Taille de police',
-            customRender: (item: any) => (
+            icon: "",
+            customRender: (item: IconItem) => (
                 <div className="relative">
                     <button
                         className={`p-2 rounded-lg 
@@ -489,11 +499,10 @@ export default function EditBar() {
             id: 'text-color',
             icon: TextColor,
             name: 'Couleur de texte',
-            customRender: (item: any) => (
+            customRender: (item: IconItem) => (
                 <div className="relative">
                     <button
-                        className={`p-2 hover:bg-gray-100 rounded-lg ${activeDropdown === 'text-color' ? 'bg-gray-200' : ''} 
-                            ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`p-2 hover:bg-gray-100 rounded-lg ${activeDropdown === 'text-color' ? 'bg-gray-200' : ''}`}
                         title={item.name}
                         onMouseDown={(e) => {
                             e.preventDefault();
@@ -570,7 +579,7 @@ export default function EditBar() {
             id: 'line-height',
             icon: LineHeight,
             name: 'Hauteur de ligne',
-            customRender: (item: any) => (
+            customRender: (item: IconItem) => (
                 <div className="relative">
                     <button
                         className={`p-2 rounded-lg 

@@ -4,10 +4,16 @@ import { useEffect, useState } from 'react';
 import { sections } from '@/app/data/sections';
 import { useDraggable } from '@dnd-kit/core';
 
+type Section = {
+    id?: string;
+    name: string;
+    content: string;
+};
+
 export default function Nav() {
     const [isExpanded, setIsExpanded] = useState(false);
     const [selectedItem, setSelectedItem] = useState<number | null>(null);
-    const [itemContent, setItemContent] = useState<any>(null);
+    const [itemContent, setItemContent] = useState<Section[] | null>(null);
 
     const navItems = [
         { name: "Sections", key: "sections", icon: "/static/icons/sections.svg" },
@@ -45,7 +51,7 @@ export default function Nav() {
         }
     };
     
-    function DraggableSection({ section, index }: { section: any, index: number }) {
+    function DraggableSection({ section, index }: { section: Section, index: number }) {
         const sectionWithId = {
             ...section,
             id: section.id || `section-${index}`
@@ -135,7 +141,7 @@ export default function Nav() {
                                 <div className="mt-4 max-h-[calc(100vh-100px)] overflow-y-auto no-scrollbar">
                                     {navItems[selectedItem].key === 'sections' && (
                                         <div className="space-y-6 animate-slideInFromBottom overflow-hidden">
-                                            {itemContent.map((section: any, idx: number) => (
+                                            {itemContent.map((section: Section, idx: number) => (
                                                 <div key={idx} className="relative">
                                                     <h3 className="text-lg font-semibold mb-1 text-black">
                                                         {section.name}
